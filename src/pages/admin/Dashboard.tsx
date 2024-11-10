@@ -163,10 +163,12 @@ const DashboardAdmin: React.FC = () => {
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            <Sider collapsible collapsed={collapsed} width={200} className="site-layout-background">
-                <Button type="primary" onClick={toggleCollapsed} style={{ margin: 16 }}>
-                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                </Button>
+            <Sider collapsed={collapsed} width={200} className="site-layout-background">
+                <div className="w-full bg-white">
+                    <Button type="primary" onClick={toggleCollapsed} className="m-4">
+                        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    </Button>
+                </div>
                 <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}
                     items={[
                         {
