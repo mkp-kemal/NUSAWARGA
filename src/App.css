@@ -1,0 +1,11 @@
+/* CSS untuk membuat tabel dapat digulir ke samping pada layar kecil */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Membatasi lebar tabel agar tidak melebihi layar pada perangkat kecil */
+@media (max-width: 768px) {
+    .table-responsive table {
+        min-width: 600px; /* Atur sesuai kebutuhan */
+    }
+}
