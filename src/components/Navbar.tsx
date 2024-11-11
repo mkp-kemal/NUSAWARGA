@@ -148,9 +148,11 @@ const Navbar: React.FC = () => {
                                         Artikel
                                     </a>
                                 )}
-                                <Button type="primary" className="block w-full text-sm font-medium">
-                                    <a href="/login">Login</a>
-                                </Button>
+                                {location.pathname !== '/login' && (
+                                    <Button type="primary" className="block w-full text-sm font-medium">
+                                        <a href="/login">Login</a>
+                                    </Button>
+                                )}
                             </nav>
                         </div>
 

@@ -8,6 +8,7 @@ const { Sider, Content } = Layout;
 
 const DashboardAdmin: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any[]>([
         {
             key: 1,
@@ -136,6 +137,7 @@ const DashboardAdmin: React.FC = () => {
         {
             title: "Action",
             key: "action",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             render: (record: any) => (
                 <span>
                     <Button type="link" onClick={() => showModal(record.key)}>Edit</Button>
@@ -145,11 +147,13 @@ const DashboardAdmin: React.FC = () => {
         },
     ];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const deleteArticle = (key: any) => {
         setData(data.filter(item => item.key !== key));
         message.success("Artikel berhasil dihapus!");
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleImageChange = (info: any) => {
         setImageUrl(info.fileList);
     };
@@ -184,7 +188,7 @@ const DashboardAdmin: React.FC = () => {
                         {
                             key: "3",
                             icon: <AppstoreAddOutlined />,
-                            label: collapsed ? "" : <Link to="/products">Products</Link>,
+                            label: collapsed ? "" : <Link to="/products">Tambah Artikel</Link>,
                         },
                         {
                             type: 'divider',
@@ -267,28 +271,40 @@ const DashboardAdmin: React.FC = () => {
                                 label="Date"
                                 rules={[{ required: true, message: "Please select the date!" }]}
                             >
-                                <DatePicker style={{ width: "100%" }} />
+                                <DatePicker
+                                    format="YYYY-MM-DD"
+                                    style={{ width: "100%" }}
+                                    defaultValue={moment()}
+                                />
                             </Form.Item>
 
-                            <Form.Item
-                                name="image"
-                                label="Upload Image"
-                                valuePropName="fileList"
-                                getValueFromEvent={(e) => e.fileList}
-                            >
+                            {/* Upload Image */}
+                            <Form.Item name="image" label="Upload Image">
                                 <Upload
                                     name="image"
                                     listType="picture-card"
+                                    className="upload-list-inline"
                                     showUploadList={false}
-                                    beforeUpload={() => false}
-                                    onChange={handleImageChange}
+                                    beforeUpload={(file) => {
+                                        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+                                        if (!isJpgOrPng) {
+                                            message.error('Hanya file JPG, PNG, atau JPEG yang dapat diunggah!');
+                                            return false;
+                                        }
+
+                                        const reader = new FileReader();
+                                        reader.onload = () => setImageUrl(reader.result as string);
+                                        reader.readAsDataURL(file);
+                                        return false;
+                                    }} onChange={handleImageChange}
                                 >
                                     {imageUrl ? (
-                                        <img src={imageUrl} alt="image" style={{ width: "100%" }} />
+                                        <img src={imageUrl} alt="uploaded" style={{ width: "100%" }} />
                                     ) : (
                                         uploadButton
                                     )}
                                 </Upload>
+                                <p className="mt-2 text-gray-500">Max file size: 5MB. Accepts JPG, PNG, JPEG.</p>
                             </Form.Item>
                         </Form>
                     </Modal>

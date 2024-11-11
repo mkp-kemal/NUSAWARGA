@@ -2,14 +2,13 @@ import React from "react";
 import { Form, Input, Button, Card } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { FaHome } from "react-icons/fa"; // Import ikon Home
 
 const Auth: React.FC = () => {
     const navigate = useNavigate();
 
     const onFinish = (values: { username: string; password: string }) => {
         console.log("Success:", values);
-        navigate("/"); // Arahkan ke halaman utama setelah login
+        navigate("/admin");
     };
 
     return (
@@ -53,17 +52,6 @@ const Auth: React.FC = () => {
                 </Form>
                 <div className="text-center mt-4">
                     <a href="#" className="text-blue-500">Forgot password?</a>
-                </div>
-                {/* Tombol Home untuk kembali ke halaman utama */}
-                <div className="text-center mt-4">
-                    <Button
-                        type="default"
-                        onClick={() => navigate("/")} // Mengarahkan ke halaman utama
-                        icon={<FaHome />}
-                        className="w-full"
-                    >
-                        Home
-                    </Button>
                 </div>
             </Card>
         </div>
