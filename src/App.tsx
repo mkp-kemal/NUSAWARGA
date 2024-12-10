@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Article from './pages/Article';
+import Auth from './pages/admin/Auth';
 
 function App() {
 
@@ -58,8 +59,8 @@ const MainRoutes = () => {
           {/* <Route path="/article/:id" element={<ArticleDetail />} /> */}
 
           {/* ADMINISTRATOR */}
-          {/* <Route path="/login" element={<Auth />} />
-          <Route path="/admin" element={<AdminSection setAdminCountdown={showCountdown} setName={name} />} /> */}
+          <Route path="/login" element={<Auth />} />
+          {/* <Route path="/admin" element={<AdminSection setAdminCountdown={showCountdown} setName={name} />} /> */} */}
         </Routes>
       </div>
       {/* <Footer /> */}
