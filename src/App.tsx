@@ -19,7 +19,7 @@ export default App
 
 const MainRoutes = () => {
   const [name, setName] = useState('');
-  const [showCountdown, setShowCountdown] = useState(false);
+  // const [showCountdown, setShowCountdown] = useState(false);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -42,9 +42,9 @@ const MainRoutes = () => {
       .then((response) => {
         setName(response.data);
       })
-      .catch(() => {
-        setShowCountdown(true);
-      });
+      // .catch(() => {
+      //   setShowCountdown(true);
+      // });
   };
 
   return (
