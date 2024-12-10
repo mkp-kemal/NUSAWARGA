@@ -1,39 +1,38 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Image, message, notification } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Button, Image, message, notification, Spin } from 'antd';
 import { FaShareAltSquare } from 'react-icons/fa';
-import { ImSpinner10 } from "react-icons/im";
 import formatDateAdmin from '../../helpers/DateFormate';
 import DOMPurify from 'dompurify';
+import BaseURLAPI from '../../helpers/BaseUrl';
+import { BsClockFill } from 'react-icons/bs';
 
 const ArticleDetail = () => {
     const { id } = useParams();
     const [blog, setBlog] = useState<any>(null);
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBlog = async () => {
-            axios.get(`http://localhost:3000/api/v1/blog/${id}`)
-                .then((response) => {
-                    setBlog(response.data);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    notification.error({
-                        message: "Gagal memuat blog",
-                        description: error.response.data.message
-                    })
+            try {
+                const response = await axios.get(BaseURLAPI(`api/v1/blog/${id}`));
+                setBlog(response.data);
+                setLoading(false);
+            } catch (error: any) {
+                notification.error({
+                    message: 'Gagal memuat blog',
+                    description: error?.response?.data?.message || 'Terjadi kesalahan!',
                 });
+                setLoading(false);
+            }
         };
 
         fetchBlog();
     }, [id]);
 
     const handleBack = () => {
-        navigate(-1);
+        window.history.back();
     };
 
     const handleShare = () => {
@@ -42,49 +41,73 @@ const ArticleDetail = () => {
             .then(() => {
                 message.success('Link copied to clipboard!');
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error('Error copying text: ', err);
             });
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
-        <>
-            {loading ? (
-                <div className="flex justify-center items-center h-screen mt-33">
-                    <ImSpinner10 className="text-4xl animate-spin text-tosca" />
+        <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+                <Button onClick={handleBack}>Kembali</Button>
+                <Button
+                    type="primary"
+                    icon={<FaShareAltSquare />}
+                    onClick={handleShare}
+                >
+                    Share
+                </Button>
+            </div>
+
+            {/* Layout Artikel */}
+            <div className="flex flex-col md:flex-row gap-6">
+                {/* Gambar */}
+                <div className="flex-shrink-0">
+                    <Image
+                        src={blog?.image || 'https://via.placeholder.com/300'}
+                        alt={blog?.title}
+                        className="rounded-md border border-gray-300"
+                        width={window.innerWidth < 768 ? '100%' : 300}
+                        height={window.innerWidth < 768 ? '100%' : 300}
+                        style={{ objectFit: 'cover' }}
+                    />
                 </div>
-            ) : (
-                <>
-                    <div className="container mx-auto py-8 px-4 fade-in">
-                        <Button onClick={handleBack}>Kembali</Button>
-                        <Button onClick={handleShare} style={{ marginLeft: '10px' }}><FaShareAltSquare />Share Link</Button>
-                        <div className="bg-white shadow-md rounded-lg p-6">
-                            <h1 className="text-3xl font-bold mb-2">{blog.title}</h1>
-                            <div className="mb-4 flex justify-between">
-                                <span className="text-sm text-gray-600">{formatDateAdmin(blog.date)}</span>
-                                <p className="text-sm text-white font-semibold bg-tosca rounded-lg px-2">Author: {blog.publisher}</p>
-                            </div>
-                            <div className="mb-4">
-                                <Image
-                                    src={`${blog.image}`}
-                                    alt="Blog"
-                                    className="object-cover rounded-xl"
-                                    width="100%"
-                                    height={400}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <p className="text-xl text-gray-700 font-semibold">{blog.description}</p>
-                            </div>
-                            <div
-                                className="text-gray-700 mt-10 custom-list custom-paragraph"
-                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.story) }}
-                            />
-                        </div>
+
+                {/* Teks Artikel */}
+                <div className="text-justify flex-1">
+                    <div className="flex items-center text-sm text-blue-400 mb-4">
+                        <BsClockFill className="mr-2" />
+                        {
+                            blog?.date && (
+                                <span>
+                                    {
+                                        new Date().toDateString() === new Date(blog?.date).toDateString()
+                                            ? 'Diposting hari ini'
+                                            : `${formatDateAdmin(blog?.date)} (${Math.ceil(
+                                                (new Date().getTime() - new Date(blog?.date).getTime()) / (1000 * 60 * 60 * 24)
+                                            )} hari yang lalu)`
+                                    }
+                                </span>
+                            )
+                        }
                     </div>
-                </>
-            )}
-        </>
+                    <div
+                        className="text-base leading-relaxed custom-list custom-paragraph"
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(blog?.story || ''),
+                        }}
+                    />
+                </div>
+            </div>
+        </div>
     );
 };
 

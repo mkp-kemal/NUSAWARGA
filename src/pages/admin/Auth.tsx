@@ -53,6 +53,13 @@ const Auth: React.FC = () => {
         }
     };
 
+    const handleForgotPass = () => {
+        notification.warning({
+            message: 'Lupa Password?',
+            description: "Silahkan hubungi developer, Kemal Pasha",
+        });
+    }
+
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-slate-400">
             <Card className="w-full max-w-md p-8 shadow-lg">
@@ -94,7 +101,7 @@ const Auth: React.FC = () => {
                 </Form>
                 <div className="text-center mt-4">
                     {error && <p className="text-red-500 mb-4">{error}</p>}
-                    <a href="#" className="text-blue-500">Forgot password?</a>
+                    <a onClick={handleForgotPass} className="text-blue-500">Lupa password?</a>
                 </div>
             </Card>
         </div>

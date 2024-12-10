@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Article from './pages/Article';
 import Auth from './pages/admin/Auth';
 import { AdminSection } from './pages/admin/Admin';
+import ArticleDetail from './pages/admin/ArticleDetail';
 
 function App() {
 
@@ -27,7 +28,7 @@ const MainRoutes = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/article" element={<Article />} />
-          {/* <Route path="/article/:id" element={<ArticleDetail />} /> */}
+          <Route path="/article/:id" element={<ArticleDetail />} />
 
           {/* ADMINISTRATOR */}
           <Route path="/login" element={<Auth />} />
