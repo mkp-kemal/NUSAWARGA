@@ -1,16 +1,8 @@
 {
-    "version": 2,
-    "name": "fe-v2",
-    "builds": [
-        {
-            "src": "vite.config.ts",
-            "use": "@vercel/static-build"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "vite.config.ts"
-        }
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/"
+      }
     ]
-}
+  }
