@@ -136,7 +136,7 @@ const DashboardAdmin: React.FC = () => {
             title: 'No',
             dataIndex: 'no',
             key: 'no',
-            render: (text: string, record: any, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
+            render: (_: string, __: any, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
         },
         {
             title: "Publisher",
