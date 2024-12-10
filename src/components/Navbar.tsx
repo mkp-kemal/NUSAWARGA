@@ -3,16 +3,11 @@ import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 
-interface NavbarProps {
-    setCurrentName: (section: string) => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ setCurrentName }) => {
+const Navbar: React.FC = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [scrolling, setScrolling] = useState(false);
     const location = useLocation();
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-    const name = String(setCurrentName);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -47,7 +42,7 @@ const Navbar: React.FC<NavbarProps> = ({ setCurrentName }) => {
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex items-center space-x-4">
                                         <p className="text-base font-medium text-white">
-                                            {name || "Guest"}
+                                            {"Guest"}
                                         </p>
                                         <div className="flex-shrink-0">
                                             <FaUser className="h-10 w-10 rounded-full text-white" />
