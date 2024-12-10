@@ -2,12 +2,14 @@ import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import { useUser } from "../helpers/UserContext";
 
 const Navbar: React.FC = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [scrolling, setScrolling] = useState(false);
     const location = useLocation();
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+    const { user } = useUser();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,6 +26,8 @@ const Navbar: React.FC = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
+    console.log(user);
 
     return (
         <>
@@ -42,7 +46,7 @@ const Navbar: React.FC = () => {
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex items-center space-x-4">
                                         <p className="text-base font-medium text-white">
-                                            {"Guest"}
+                                            {user ? user.name : "Guest"}
                                         </p>
                                         <div className="flex-shrink-0">
                                             <FaUser className="h-10 w-10 rounded-full text-white" />
