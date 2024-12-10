@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
+import Article from './pages/Article';
 
 function App() {
 
@@ -42,9 +43,9 @@ const MainRoutes = () => {
       .then((response) => {
         setName(response.data);
       })
-      // .catch(() => {
-      //   setShowCountdown(true);
-      // });
+    // .catch(() => {
+    //   setShowCountdown(true);
+    // });
   };
 
   return (
@@ -53,7 +54,7 @@ const MainRoutes = () => {
       <div className="container mx-auto mt-8">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-           {/* <Route path="/article" element={<Article />} /> */}
+          <Route path="/article" element={<Article />} />
           {/* <Route path="/article/:id" element={<ArticleDetail />} /> */}
 
           {/* ADMINISTRATOR */}
