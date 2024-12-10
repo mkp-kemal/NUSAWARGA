@@ -3,6 +3,7 @@ import { Form, Input, Button, Typography, DatePicker, Upload, message } from "an
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import axios from "axios";
+import BaseURLAPI from "../../helpers/BaseUrl";
 
 const { Title } = Typography;
 
@@ -22,7 +23,7 @@ const AddArticle: React.FC = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:3000/api/v1/blog/post", formData, {
+            const response = await axios.post(BaseURLAPI('api/v1/blog/post'), formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

@@ -3,6 +3,7 @@ import { Form, Input, Button, Card, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import BaseURLAPI from "../../helpers/BaseUrl";
 
 const Auth: React.FC = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Auth: React.FC = () => {
 
     const onFinish = async (values: { username: string; password: string }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/v1/login", values);
+            const response = await axios.post(BaseURLAPI('api/v1/login'), values);
 
             if (response.status === 200) {
                 const token = response.data.token;
@@ -35,7 +36,7 @@ const Auth: React.FC = () => {
             .map(cookie => cookie.split('='))
             .find(cookie => cookie[0].trim() === 'jwt')?.[1];
         try {
-            const response = await axios.get('http://localhost:3000/api/v1/validate', {
+            const response = await axios.get(BaseURLAPI('api/v1/validate'), {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

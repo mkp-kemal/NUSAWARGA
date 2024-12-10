@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import formatDateAdmin from "../helpers/DateFormate";
 import truncateText from "../helpers/Truncated";
+import BaseURLAPI from "../helpers/BaseUrl";
 
 const { Meta } = Card;
 
@@ -12,7 +13,7 @@ const Article: React.FC = () => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/v1/blogs")
+        axios.get(BaseURLAPI('api/v1/blogs'))
             .then((response) => {
                 setData(response.data);
             })

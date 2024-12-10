@@ -7,6 +7,7 @@ import formatDateAdmin from "../../helpers/DateFormate";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { ImSpinner10 } from "react-icons/im";
+import BaseURLAPI from "../../helpers/BaseUrl";
 
 const { Content } = Layout;
 
@@ -32,7 +33,7 @@ const DashboardAdmin: React.FC = () => {
     }, []);
 
     const fetchBlogs = async () => {
-        await axios.get("http://localhost:3000/api/v1/blogs")
+        await axios.get(BaseURLAPI('api/v1/blogs'))
             .then((response) => {
                 setData(response.data);
                 setLoading(false);
@@ -88,7 +89,7 @@ const DashboardAdmin: React.FC = () => {
             };
 
             if (isEditMode && editArticleId !== null) {
-                await axios.put(`http://localhost:3000/api/v1/blog/${editArticleId}`, formData);
+                await axios.put(BaseURLAPI(`api/v1/blog/${editArticleId}`), formData);
                 message.success("Article updated successfully");
 
                 setData((prevData) =>
