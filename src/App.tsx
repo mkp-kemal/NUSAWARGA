@@ -60,7 +60,7 @@ const MainRoutes = () => {
 
           {/* ADMINISTRATOR */}
           <Route path="/login" element={<Auth />} />
-          {/* <Route path="/admin" element={<AdminSection setAdminCountdown={showCountdown} setName={name} />} /> */} */}
+          {/* <Route path="/admin" element={<AdminSection setAdminCountdown={showCountdown} setName={name} />} /> */}
         </Routes>
       </div>
       {/* <Footer /> */}
