@@ -3,12 +3,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardAdmin from "./Dashboard";
 import AddArticle from "./Add";
 
-interface AdminCountdown {
-    setAdminCountdown: (section: boolean) => void;
-    setName: (name: string) => void;
-}
-
-export const AdminSection: React.FC<AdminCountdown> = ({ setAdminCountdown, setName }) => {
+export const AdminSection: React.FC = () => {
     const [currentSection, setCurrentSection] = useState('dashboard');
     const [countdown, setCountdown] = useState(5);
 
@@ -20,17 +15,17 @@ export const AdminSection: React.FC<AdminCountdown> = ({ setAdminCountdown, setN
 
             return () => clearInterval(timer);
         } else if (countdown === 0) {
-            setAdminCountdown(false); // Contoh penggunaan fungsi
+            // setAdminCountdown(false); // Contoh penggunaan fungsi
             window.location.href = '/login';
         }
-    }, [countdown, setAdminCountdown]);
+    }, [countdown]);
 
     const renderSection = () => {
         switch (currentSection) {
             case 'dashboard':
                 return <DashboardAdmin />;
             case 'article':
-                return <AddArticle name={setName} />;
+                return <AddArticle />;
             default:
                 return <DashboardAdmin />;
         }

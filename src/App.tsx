@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Article from './pages/Article';
 import Auth from './pages/admin/Auth';
+import { AdminSection } from './pages/admin/Admin';
 
 function App() {
 
@@ -20,8 +21,8 @@ export default App
 
 
 const MainRoutes = () => {
-  const [name, setName] = useState('');
-  // const [showCountdown, setShowCountdown] = useState(false);
+  const [name, setName] = useState<string>('');
+  // const [showCountdown, setShowCountdown] = useState<boolean>(false);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -44,9 +45,9 @@ const MainRoutes = () => {
       .then((response) => {
         setName(response.data);
       })
-    // .catch(() => {
-    //   setShowCountdown(true);
-    // });
+      // .catch(() => {
+      //   setShowCountdown(true);
+      // });
   };
 
   return (
@@ -60,7 +61,7 @@ const MainRoutes = () => {
 
           {/* ADMINISTRATOR */}
           <Route path="/login" element={<Auth />} />
-          {/* <Route path="/admin" element={<AdminSection setAdminCountdown={showCountdown} setName={name} />} /> */}
+          <Route path="/admin" element={<AdminSection />} />
         </Routes>
       </div>
       {/* <Footer /> */}

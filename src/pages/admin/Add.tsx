@@ -6,17 +6,13 @@ import axios from "axios";
 
 const { Title } = Typography;
 
-interface AddArticleInterface {
-    name: (name: string) => void;
-}
-
-const AddArticle: React.FC<AddArticleInterface> = ({name}) => {
+const AddArticle: React.FC = () => {
     const [form] = Form.useForm();
 
     const onFinish = async (values: { title: string; description: string; date: any; image: any }) => {
         const formData = new FormData();
 
-        formData.append("publisher", name as unknown as string);
+        formData.append("publisher", "admin");
         formData.append("title", values.title as string);
         formData.append("description", values.description);
         formData.append("date", values.date ? values.date.format('YYYY-MM-DD') : "");
