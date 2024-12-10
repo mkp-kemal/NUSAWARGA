@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Table, Layout, Button, Modal, Form, Input, DatePicker, Image, message, Row, Col, Card, notification } from "antd";
+import { Table, Layout, Button, Modal, Form, Input, DatePicker, Image, message, Row, Col, Card, notification, Spin } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import moment from "moment";
 import axios from "axios";
 import formatDateAdmin from "../../helpers/DateFormate";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
-import { ImSpinner10 } from "react-icons/im";
 import BaseURLAPI from "../../helpers/BaseUrl";
 
 const { Content } = Layout;
@@ -137,7 +136,7 @@ const DashboardAdmin: React.FC = () => {
             title: 'No',
             dataIndex: 'no',
             key: 'no',
-            render: (index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
+            render: (text: string, record: any, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
         },
         {
             title: "Publisher",
@@ -193,43 +192,45 @@ const DashboardAdmin: React.FC = () => {
         },
     ];
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Layout style={{ padding: "0 24px 24px" }}>
                 <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
 
-                    {loading ? (
-                        <div className="flex justify-center">
-                            <ImSpinner10 className="text-4xl animate-spin text-tosca" />
+                    <>
+                        <Row gutter={16} className="mb-6 p-4 rounded-lg">
+                            <Col span={12}>
+                                <Card title={<span className='text-white'>Jumlah Postingan</span>} bordered={false} className="p-4 bg-green-600 text-white font-bold shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                    {blogCount}
+                                </Card>
+                            </Col>
+                            <Col span={12}>
+                                <Card title={<span className='text-white'>Maksimal Postingan</span>} bordered={false} className="p-4 bg-lime-900 text-white font-bold shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                    {maxBlog - blogCount}
+                                </Card>
+                            </Col>
+                        </Row>
+                        <div className="table-responsive">
+                            <Table
+                                columns={columns}
+                                dataSource={paginatedData}
+                                pagination={{
+                                    current: pagination.current,
+                                    pageSize: pagination.pageSize,
+                                    total: data.length,
+                                }}
+                                onChange={handleTableChange}
+                            />
                         </div>
-                    ) : (
-                        <>
-                            <Row gutter={16} className="mb-6 p-4 rounded-lg">
-                                <Col span={12}>
-                                    <Card title={<span className='text-white'>Jumlah Postingan</span>} bordered={false} className="p-4 bg-green-600 text-white font-bold shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                        {blogCount}
-                                    </Card>
-                                </Col>
-                                <Col span={12}>
-                                    <Card title={<span className='text-white'>Maksimal Postingan</span>} bordered={false} className="p-4 bg-lime-900 text-white font-bold shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                        {maxBlog - blogCount}
-                                    </Card>
-                                </Col>
-                            </Row>
-                            <div className="table-responsive">
-                                <Table
-                                    columns={columns}
-                                    dataSource={paginatedData}
-                                    pagination={{
-                                        current: pagination.current,
-                                        pageSize: pagination.pageSize,
-                                        total: data.length,
-                                    }}
-                                    onChange={handleTableChange}
-                                />
-                            </div>
-                        </>
-                    )}
+                    </>
 
                     <Modal
                         title={isEditMode ? "Edit Article" : "Add New Article"}
