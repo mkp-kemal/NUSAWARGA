@@ -9,8 +9,9 @@ const Navbar: React.FC = () => {
     const [scrolling, setScrolling] = useState(false);
     const location = useLocation();
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-    const { user } = useUser();
-
+    const userString = JSON.stringify(useUser().user);
+    const user = JSON.parse(userString);
+    
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 50) {
@@ -26,6 +27,8 @@ const Navbar: React.FC = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
+    console.log(user);
 
     return (
         <>
@@ -44,7 +47,7 @@ const Navbar: React.FC = () => {
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex items-center space-x-4">
                                         <p className="text-base font-medium text-white">
-                                            {user ? user.name : "Guest"}
+                                            {user || "Guest"}
                                         </p>
                                         <div className="flex-shrink-0">
                                             <FaUser className="h-10 w-10 rounded-full text-white" />
