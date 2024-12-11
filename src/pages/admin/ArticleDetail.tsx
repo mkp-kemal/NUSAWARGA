@@ -57,7 +57,7 @@ const ArticleDetail = () => {
     return (
         <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-lg">
             <div className="flex justify-between items-center mb-4">
-                <Button onClick={handleBack}>Kembali</Button>
+                <Button onClick={handleBack}>Kembali</Button >
                 <Button
                     type="primary"
                     icon={<FaShareAltSquare />}
@@ -65,12 +65,12 @@ const ArticleDetail = () => {
                 >
                     Share
                 </Button>
-            </div>
+            </div >
 
             {/* Layout Artikel */}
-            <div className="flex flex-col md:flex-row gap-6">
+            < div className="flex flex-col md:flex-row gap-6" >
                 {/* Gambar */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" >
                     <Image
                         src={blog?.image || 'https://via.placeholder.com/300'}
                         alt={blog?.title}
@@ -79,10 +79,10 @@ const ArticleDetail = () => {
                         height={window.innerWidth < 768 ? '100%' : 300}
                         style={{ objectFit: 'cover' }}
                     />
-                </div>
+                </div >
 
                 {/* Teks Artikel */}
-                <div className="text-justify flex-1">
+                <div className="text-justify flex-1" >
                     <div className="flex items-center text-sm text-blue-400 mb-4">
                         <BsClockFill className="mr-2" />
                         {
@@ -106,8 +106,8 @@ const ArticleDetail = () => {
                         }}
                     />
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
