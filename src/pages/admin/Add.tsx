@@ -4,16 +4,18 @@ import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import axios from "axios";
 import BaseURLAPI from "../../helpers/BaseUrl";
+import { useUser } from "../../helpers/UserContext";
 
 const { Title } = Typography;
 
 const AddArticle: React.FC = () => {
     const [form] = Form.useForm();
+    const { user } = useUser();
 
     const onFinish = async (values: { title: string; description: string; date: any; image: any }) => {
         const formData = new FormData();
 
-        formData.append("publisher", "admin");
+        formData.append("publisher", user ? user.name : "anonymous");
         formData.append("title", values.title as string);
         formData.append("description", values.description);
         formData.append("date", values.date ? values.date.format('YYYY-MM-DD') : "");

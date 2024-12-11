@@ -79,7 +79,6 @@ const DashboardAdmin: React.FC = () => {
         try {
             const values = await form.validateFields();
             const formData = {
-                publisher: values.publisher,
                 story: values.story,
                 title: values.title,
                 description: values.description,
@@ -273,14 +272,6 @@ const DashboardAdmin: React.FC = () => {
 
                             <Form.Item
                             >
-                            </Form.Item>
-
-                            <Form.Item
-                                name="publisher"
-                                label="Publisher"
-                                rules={[{ required: true, message: "Please input the publisher!" }]}
-                            >
-                                <Input placeholder="Enter publisher name" />
                             </Form.Item>
 
                             <Form.Item
