@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { AppstoreAddOutlined, DashboardOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Button, Layout, Menu } from "antd";
+import { useUser } from "../../helpers/UserContext";
+import { ImImages } from "react-icons/im";
 
 const { Sider } = Layout;
 
@@ -12,6 +14,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ setCurrentSection }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const userString = JSON.stringify(useUser().user);
+    const user = JSON.parse(userString);
 
     const onLogout = () => {
         document.cookie.split(";").forEach(cookie => {
@@ -50,6 +54,19 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentSection }) => {
                         icon: <AppstoreAddOutlined />,
                         label: <a onClick={() => setCurrentSection('article')} title="Halaman tambah artikel">Tambah Artikel</a>,
                     },
+                    ...(user === "adminnusa"
+                        ? [
+                            {
+                                key: "3",
+                                icon: <ImImages />,
+                                label: (
+                                    <a onClick={() => setCurrentSection("images")} title="Images GCP">
+                                        Images
+                                    </a>
+                                ),
+                            },
+                        ]
+                        : []),
                     {
                         type: 'divider',
                     },

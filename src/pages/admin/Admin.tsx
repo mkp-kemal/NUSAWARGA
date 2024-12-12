@@ -3,6 +3,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardAdmin from "./Dashboard";
 import AddArticle from "./Add";
 import { useUser } from "../../helpers/UserContext";
+import { Images } from "./Images";
 
 export const AdminSection: React.FC = () => {
     const [currentSection, setCurrentSection] = useState('dashboard');
@@ -27,6 +28,8 @@ export const AdminSection: React.FC = () => {
                 return <DashboardAdmin />;
             case 'article':
                 return <AddArticle />;
+            case 'images':
+                return <Images />;
             default:
                 return <DashboardAdmin />;
         }
