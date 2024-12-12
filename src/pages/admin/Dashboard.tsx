@@ -104,7 +104,7 @@ const DashboardAdmin: React.FC = () => {
             fetchBlogs();
             setLoadingModal(false);
         } catch (error) {
-            message.error("Failed to update article:", error);
+            message.error("Failed to update article");
         }
     };
 
