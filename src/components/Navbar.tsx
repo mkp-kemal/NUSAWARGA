@@ -28,8 +28,6 @@ const Navbar: React.FC = () => {
         };
     }, []);
 
-    console.log(user);
-
     return (
         <>
             {
