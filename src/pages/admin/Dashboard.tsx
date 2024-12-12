@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Layout, Button, Modal, Form, Input, DatePicker, Image, message, Row, Col, Card, notification, Spin } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import axios from "axios";
 import formatDateAdmin from "../../helpers/DateFormate";
@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 import BaseURLAPI from "../../helpers/BaseUrl";
 
 const { Content } = Layout;
+const { confirm } = Modal;
 
 const DashboardAdmin: React.FC = () => {
     const [data, setData] = useState<any[]>([]);
@@ -20,7 +21,8 @@ const DashboardAdmin: React.FC = () => {
     const [editorValue, setEditorValue] = useState('');
     const [loading, setLoading] = useState(true);
     const [blogCount, setBlogCount] = useState(0);
-    const maxBlog = 100
+    const maxBlog = 100;
+    const [loadingModal, setLoadingModal] = useState(false);
 
     const [pagination, setPagination] = useState({
         current: 1,
@@ -77,6 +79,7 @@ const DashboardAdmin: React.FC = () => {
 
     const handleUpdate = async () => {
         try {
+            setLoadingModal(true);
             const values = await form.validateFields();
             const formData = {
                 story: values.story,
@@ -99,15 +102,10 @@ const DashboardAdmin: React.FC = () => {
             form.resetFields();
             setImageUrl("");
             fetchBlogs();
+            setLoadingModal(false);
         } catch (error) {
-            message.error("Failed to update article");
-            console.error("Error updating article:", error);
+            message.error("Failed to update article:", error);
         }
-    };
-
-    const deleteArticle = (key: any) => {
-        setData(data.filter(item => item.key !== key));
-        message.success("Artikel berhasil dihapus!");
     };
 
     // const handleImageChange = (info: any) => {
@@ -183,7 +181,7 @@ const DashboardAdmin: React.FC = () => {
                         className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded ml-2"
                         icon={<DeleteOutlined />}
                         size="small"
-                        onClick={() => deleteArticle(record.key)}
+                        onClick={() => showDeleteConfirm(record._id)}
                     >
                     </Button>
                 </div>
@@ -199,11 +197,50 @@ const DashboardAdmin: React.FC = () => {
         );
     }
 
+    const showDeleteConfirm = (id: string) => {
+        confirm({
+            title: 'Apakah Anda yakin ingin menghapus postingan ini?',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Tindakan ini tidak dapat dibatalkan dan belum ada backup.',
+            okText: 'Ya, hapus',
+            okType: 'danger',
+            cancelText: 'Tidak',
+            onOk() {
+                handleDelete(id);
+            },
+            onCancel() {
+                notification.error({
+                    message: 'Aksi dibatalkan!',
+                    description: "Postingan tidak ada yang dihapus",
+                });
+            },
+        });
+    }
+
+    const handleDelete = async (id: string) => {
+        const token = document.cookie
+            .split(';')
+            .map(cookie => cookie.split('='))
+            .find(cookie => cookie[0].trim() === 'jwt')?.[1];
+
+        try {
+            await axios.delete(`${BaseURLAPI('api/v1/blog')}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            message.success('Blog berhasil dihapus');
+            setData(data.filter(blog => blog._id !== id));
+            setBlogCount(blogCount - 1);
+        } catch (error) {
+            message.error('Gagal menghapus blog');
+        }
+    };
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Layout style={{ padding: "0 24px 24px" }}>
                 <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-
                     <>
                         <Row gutter={16} className="mb-6 p-4 rounded-lg">
                             <Col span={12}>
@@ -232,17 +269,25 @@ const DashboardAdmin: React.FC = () => {
                     </>
 
                     <Modal
-                        title={isEditMode ? "Edit Article" : "Add New Article"}
+                        title={isEditMode ? "Edit Postingan" : "Tambah Postingan"}
                         open={isModalVisible}
                         onOk={handleUpdate}
                         onCancel={handleCancel}
                         footer={[
-                            <Button key="back" onClick={handleCancel}>
-                                Cancel
-                            </Button>,
-                            <Button key="submit" type="primary" onClick={handleUpdate}>
-                                Submit
-                            </Button>,
+                            <Form.Item>
+                                {loadingModal ? (
+                                    <Button type="primary" htmlType="submit" loading></Button>
+                                ) : (
+                                    <>
+                                        <Button key="back" onClick={handleCancel}>
+                                            Cancel
+                                        </Button>,
+                                        <Button key="submit" type="primary" onClick={handleUpdate}>
+                                            Submit
+                                        </Button>,
+                                    </>
+                                )}
+                            </Form.Item>
                         ]}
                     >
                         <Form

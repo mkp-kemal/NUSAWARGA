@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Typography, DatePicker, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import axios from "axios";
 import BaseURLAPI from "../../helpers/BaseUrl";
 import { useUser } from "../../helpers/UserContext";
+import { IoAddCircleSharp } from "react-icons/io5";
 
 const { Title } = Typography;
 
 const AddArticle: React.FC = () => {
     const [form] = Form.useForm();
-    const { user } = useUser();
+    const userString = JSON.stringify(useUser().user);
+    const user = JSON.parse(userString);
+    const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
     const onFinish = async (values: { title: string; description: string; date: any; image: any }) => {
         const formData = new FormData();
 
-        formData.append("publisher", user ? user.name : "anonymous");
+        formData.append("publisher", user);
         formData.append("title", values.title as string);
         formData.append("description", values.description);
         formData.append("date", values.date ? values.date.format('YYYY-MM-DD') : "");
@@ -25,19 +28,20 @@ const AddArticle: React.FC = () => {
         }
 
         try {
+            setLoadingButton(true);
             const response = await axios.post(BaseURLAPI('api/v1/blog/post'), formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            message.success("Article successfully added!");
+            message.success("Postingan berhasil ditambahkan");
 
             if (response.status === 201) {
                 form.resetFields();
+                setLoadingButton(false)
             }
         } catch (error) {
-            message.error("Failed to add article.");
-            console.error("Error:", error);
+            message.error("Gagal menambahkan postingan");
         }
     };
 
@@ -107,9 +111,16 @@ const AddArticle: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
-                            Submit Article
-                        </Button>
+                        {loadingButton ? (
+                            <Button type="primary" htmlType="submit" loading></Button>
+                        ) : (
+                            <>
+                                <Button type="primary" htmlType="submit" block>
+                                    <IoAddCircleSharp />
+                                    Tambah Postingan
+                                </Button>
+                            </>
+                        )}
                     </Form.Item>
                 </Form>
             </div>
