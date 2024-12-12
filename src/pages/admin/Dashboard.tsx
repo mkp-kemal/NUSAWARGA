@@ -31,7 +31,18 @@ const DashboardAdmin: React.FC = () => {
 
     useEffect(() => {
         fetchBlogs();
-    }, []);
+        // Disable background scroll when modal is open
+        if (isModalVisible) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cleanup to reset overflow when modal is closed
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isModalVisible]);
 
     const fetchBlogs = async () => {
         await axios.get(BaseURLAPI('api/v1/blogs'))
@@ -103,7 +114,7 @@ const DashboardAdmin: React.FC = () => {
             setImageUrl("");
             fetchBlogs();
             setLoadingModal(false);
-        } catch (error) {
+        } catch {
             message.error("Failed to update article");
         }
     };
@@ -133,7 +144,7 @@ const DashboardAdmin: React.FC = () => {
             title: 'No',
             dataIndex: 'no',
             key: 'no',
-            render: (_: string, __: any, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
+            render: (_: string, __: string, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
         },
         {
             title: "Publisher",
@@ -232,7 +243,7 @@ const DashboardAdmin: React.FC = () => {
             message.success('Blog berhasil dihapus');
             setData(data.filter(blog => blog._id !== id));
             setBlogCount(blogCount - 1);
-        } catch (error) {
+        } catch {
             message.error('Gagal menghapus blog');
         }
     };
@@ -268,117 +279,97 @@ const DashboardAdmin: React.FC = () => {
                         </div>
                     </>
 
-                    <Modal
-                        title={isEditMode ? "Edit Postingan" : "Tambah Postingan"}
-                        open={isModalVisible}
-                        onOk={handleUpdate}
-                        onCancel={handleCancel}
-                        footer={[
-                            <Form.Item>
-                                {loadingModal ? (
-                                    <Button type="primary" htmlType="submit" loading></Button>
-                                ) : (
-                                    <>
-                                        <Button key="back" onClick={handleCancel}>
-                                            Cancel
-                                        </Button>,
-                                        <Button key="submit" type="primary" onClick={handleUpdate}>
-                                            Submit
-                                        </Button>,
-                                    </>
-                                )}
-                            </Form.Item>
-                        ]}
-                    >
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            name="article_form"
-                            initialValues={{ remember: true }}
-                        >
-                            <Form.Item
-                                name="story"
-                                label="Ceritakan Lebih Detail"
-                                rules={[{ required: true, message: 'Masukan cerita' }]}
-                            >
-                                <ReactQuill
-                                    value={editorValue}
-                                    onChange={setEditorValue}
-                                    theme="snow"
-                                    style={{ height: '300px' }}
-                                    modules={{
-                                        toolbar: [
-                                            ['bold', 'italic', 'underline', 'strike', 'link', 'blockquote', 'code'],
-                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                                        ],
-                                    }}
-                                />
-                            </Form.Item>
+                    {isModalVisible && (
+                        <div className="fixed fade-in inset-0 flex justify-center items-center bg-black bg-opacity-70 z-50 px-4 sm:px-0">
+                            <div className="bg-slate-100 p-4 w-1/2 rounded-3xl shadow-2xl">
+                                <div className="bg-slate-100 p-4 sm:p-8 w-full sm:w-full max-h-[80vh] overflow-y-auto z-60 relative rounded-2xl">
+                                    <button
+                                        onClick={handleCancel}
+                                        className="absolute top-2 sm:top-4 right-2 sm:right-4 hover:text-gray-800 text-3xl sm:text-4xl text-red-500"
+                                    >
+                                        &times;
+                                    </button>
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">
+                                        {isEditMode ? "Edit Postingan" : "Tambah Postingan"}
+                                    </h2>
 
-                            <Form.Item
-                            >
-                            </Form.Item>
+                                    <Form
+                                        form={form}
+                                        layout="vertical"
+                                        name="article_form"
+                                        initialValues={{ remember: true }}
+                                    >
+                                        <Form.Item
+                                            name="story"
+                                            label="Ceritakan Lebih Detail"
+                                            rules={[{ required: true, message: 'Masukan cerita' }]}
+                                        >
+                                            <ReactQuill
+                                                value={editorValue}
+                                                onChange={setEditorValue}
+                                                theme="snow"
+                                                style={{ height: '300px' }}
+                                                modules={{
+                                                    toolbar: [
+                                                        ['bold', 'italic', 'underline', 'strike', 'link', 'blockquote', 'code'],
+                                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                                                    ],
+                                                }}
+                                            />
+                                        </Form.Item>
 
-                            <Form.Item
-                                name="title"
-                                label="Title"
-                                rules={[{ required: true, message: "Please input the article title!" }]}
-                            >
-                                <Input placeholder="Enter article title" />
-                            </Form.Item>
+                                        <Form.Item>
+                                        </Form.Item>
 
-                            <Form.Item
-                                name="description"
-                                label="Description"
-                                rules={[{ required: true, message: "Please input the article description!" }]}
-                            >
-                                <Input.TextArea rows={4} placeholder="Enter article description" />
-                            </Form.Item>
+                                        <Form.Item
+                                            name="title"
+                                            label="Title"
+                                            rules={[{ required: true, message: "Please input the article title!" }]}
+                                        >
+                                            <Input placeholder="Enter article title" />
+                                        </Form.Item>
 
-                            <Form.Item
-                                label="Tanggal"
-                                name="date"
-                                rules={[{ required: true, message: 'Masukan Tanggal Publish' }]}
-                            >
-                                <DatePicker format="YYYY-MM-DD" />
-                            </Form.Item>
+                                        <Form.Item
+                                            name="description"
+                                            label="Description"
+                                            rules={[{ required: true, message: "Please input the article description!" }]}
+                                        >
+                                            <Input.TextArea rows={4} placeholder="Enter article description" />
+                                        </Form.Item>
 
-                            <Form.Item
-                            >
-                            </Form.Item>
+                                        <Form.Item
+                                            label="Tanggal"
+                                            name="date"
+                                            rules={[{ required: true, message: 'Masukan Tanggal Publish' }]}
+                                        >
+                                            <DatePicker format="YYYY-MM-DD" style={{ width: '100%' }} />
+                                        </Form.Item>
 
-                            {/* Upload Image */}
-                            {/* <Form.Item name="image">
-                                <Upload
-                                    name="image"
-                                    listType="picture-card"
-                                    showUploadList={false}
-                                    accept=".jpg,.jpeg,.png"
-                                    beforeUpload={(file) => {
-                                        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
-                                        if (!isJpgOrPng) {
-                                            message.error('Hanya file JPG, PNG, atau JPEG yang dapat diunggah!');
-                                            return false;
-                                        }
-
-                                        const reader = new FileReader();
-                                        
-                                        reader.onload = () => setImageUrl(reader.result as string);
-                                        reader.readAsDataURL(file);
-                                        return false;
-                                    }}
-                                    onChange={handleImageChange}
-                                >
-                                    {imageUrl ? (
-                                        <div>
-                                            <img src={imageUrl} alt="image" className="w-full h-full rounded-lg" />
-                                            <p className="text-xs italic text-gray-500">klik untuk mengganti gambar</p>
+                                        <div className="flex flex-col sm:flex-row justify-between">
+                                            {loadingModal ? (
+                                                <Button type="primary" htmlType="submit" loading></Button>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        onClick={handleCancel}
+                                                        className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mb-2 sm:mb-0"
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        onClick={handleUpdate}
+                                                        className="bg-blue-600 transition duration-300 ease-in-out text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                                    >
+                                                        Update
+                                                    </Button>
+                                                </>
+                                            )}
                                         </div>
-                                    ) : uploadButton}
-                                </Upload>
-                            </Form.Item> */}
-                        </Form>
-                    </Modal>
+                                    </Form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </Content>
             </Layout>
         </Layout>
