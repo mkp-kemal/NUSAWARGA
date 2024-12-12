@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentSection }) => {
                         icon: <AppstoreAddOutlined />,
                         label: <a onClick={() => setCurrentSection('article')} title="Halaman tambah artikel">Tambah Artikel</a>,
                     },
-                    ...(user === "adminnusa"
+                    ...(user === "kemal"
                         ? [
                             {
                                 key: "3",
