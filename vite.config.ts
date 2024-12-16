@@ -2,13 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import axios from 'axios';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),
     {
       name: 'generate-sitemap',
       configureServer(server) {
-        server.middlewares.use('/sitemap.xml', async (req, res) => {
+        server.middlewares.use('/sitemap.xml', async (_, res) => {
           try {
             // Fetch data dari API
             const response = await axios.get('https://nusaapi.vercel.app/api/v1/blogs');
